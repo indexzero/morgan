@@ -1,13 +1,14 @@
 {
-  "name": "morgan",
-  "description": "HTTP request logger middleware for node.js",
+  "name": "debra",
+  "description": "The sister of an HTTP request logger middleware for node.js",
   "version": "1.7.0",
   "contributors": [
     "Douglas Christopher Wilson <doug@somethingdoug.com>",
-    "Jonathan Ong <me@jongleberry.com> (http://jongleberry.com)"
+    "Jonathan Ong <me@jongleberry.com> (http://jongleberry.com)",
+    "Charlie Robbins <charlie.robbins@gmail.com>"
   ],
   "license": "MIT",
-  "repository": "expressjs/morgan",
+  "repository": "indexzero/morgan",
   "dependencies": {
     "basic-auth": "~1.0.4",
     "debug": "~2.2.0",

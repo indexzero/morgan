@@ -1,4 +1,4 @@
-# morgan
+# debra
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
@@ -6,19 +6,21 @@
 [![Test Coverage][coveralls-image]][coveralls-url]
 [![Gratipay][gratipay-image]][gratipay-url]
 
-HTTP request logger middleware for node.js
+The sister of an HTTP request logger middleware for node.js.
 
 > Named after [Dexter](http://en.wikipedia.org/wiki/Dexter_Morgan), a show you should not watch until completion.
+>
+> Fork named after Dexter's sister, Debra Morgan.
 
 ## API
 
 ```js
-var morgan = require('morgan')
+var debra = require('debra')
 ```
 
-### morgan(format, options)
+### debra(format, options)
 
-Create a new morgan logger middleware function using the given `format` and `options`.
+Create a new debra logger middleware function using the given `format` and `options`.
 The `format` argument may be a string of a predefined name (see below for the names),
 a string of a format string, or a function that will produce a log entry.
 
@@ -39,7 +41,7 @@ will be called as `skip(req, res)`.
 
 ```js
 // EXAMPLE: only log error responses
-morgan('combined', {
+debra('combined', {
   skip: function (req, res) { return res.statusCode < 400 }
 })
 ```
@@ -102,12 +104,12 @@ The minimal output.
 
 ##### Creating new tokens
 
-To define a token, simply invoke `morgan.token()` with the name and a callback function. This callback function is expected to return a string value. The value returned is then available as ":type" in this case:
+To define a token, simply invoke `debra.token()` with the name and a callback function. This callback function is expected to return a string value. The value returned is then available as ":type" in this case:
 ```js
-morgan.token('type', function (req, res) { return req.headers['content-type'] })
+debra.token('type', function (req, res) { return req.headers['content-type'] })
 ```
 
-Calling `morgan.token()` using the same name as an existing token will overwrite that token definition.
+Calling `debra.token()` using the same name as an existing token will overwrite that token definition.
 
 ##### :date[format]
 
@@ -149,7 +151,7 @@ The given `header` of the response.
 
 ##### :response-time[digits]
 
-The time between the request coming into `morgan` and when the response
+The time between the request coming into `debra` and when the response
 headers are written, in milliseconds.
 
 The `digits` argument is a number that specifies the number of digits to
@@ -171,15 +173,15 @@ The URL of the request. This will use `req.originalUrl` if exists, otherwise `re
 
 The contents of the User-Agent header of the request.
 
-### morgan.compile(format)
+### debra.compile(format)
 
-Compile a format string into a function for use by `morgan`. A format string
+Compile a format string into a function for use by `debra`. A format string
 is a string that represents a single log line and can utilize token syntax.
 Tokens are references by `:token-name`. If tokens accept arguments, they can
 be passed using `[]`, for example: `:token-name[pretty]` would pass the string
 `'pretty'` as an argument to the token `token-name`.
 
-Normally formats are defined using `morgan.format(name, format)`, but for certain
+Normally formats are defined using `debra.format(name, format)`, but for certain
 advanced uses, this compile function is directly available.
 
 ## Examples
@@ -190,11 +192,11 @@ Simple app that will log all request in the Apache combined format to STDOUT
 
 ```js
 var express = require('express')
-var morgan = require('morgan')
+var debra = require('debra')
 
 var app = express()
 
-app.use(morgan('combined'))
+app.use(debra('combined'))
 
 app.get('/', function (req, res) {
   res.send('hello, world!')
@@ -208,10 +210,10 @@ Simple app that will log all request in the Apache combined format to STDOUT
 ```js
 var finalhandler = require('finalhandler')
 var http = require('http')
-var morgan = require('morgan')
+var debra = require('debra')
 
 // create "middleware"
-var logger = morgan('combined')
+var logger = debra('combined')
 
 http.createServer(function (req, res) {
   var done = finalhandler(req, res)
@@ -235,7 +237,7 @@ Simple app that will log all requests in the Apache combined format to the file
 ```js
 var express = require('express')
 var fs = require('fs')
-var morgan = require('morgan')
+var debra = require('debra')
 var path = require('path')
 
 var app = express()
@@ -244,7 +246,7 @@ var app = express()
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
 
 // setup the logger
-app.use(morgan('combined', {stream: accessLogStream}))
+app.use(debra('combined', {stream: accessLogStream}))
 
 app.get('/', function (req, res) {
   res.send('hello, world!')
@@ -261,7 +263,7 @@ file per date in the `log/` directory using the
 var FileStreamRotator = require('file-stream-rotator')
 var express = require('express')
 var fs = require('fs')
-var morgan = require('morgan')
+var debra = require('debra')
 var path = require('path')
 
 var app = express()
@@ -279,7 +281,7 @@ var accessLogStream = FileStreamRotator.getStream({
 })
 
 // setup the logger
-app.use(morgan('combined', {stream: accessLogStream}))
+app.use(debra('combined', {stream: accessLogStream}))
 
 app.get('/', function (req, res) {
   res.send('hello, world!')
@@ -292,17 +294,17 @@ Sample app that will use custom token formats. This adds an ID to all requests a
 
 ```js
 var express = require('express')
-var morgan = require('morgan')
+var debra = require('debra')
 var uuid = require('node-uuid')
 
-morgan.token('id', function getId (req) {
+debra.token('id', function getId (req) {
   return req.id
 })
 
 var app = express()
 
 app.use(assignId)
-app.use(morgan(':id :method :url :response-time'))
+app.use(debra(':id :method :url :response-time'))
 
 app.get('/', function (req, res) {
   res.send('hello, world!')
@@ -318,13 +320,13 @@ function assignId (req, res, next) {
 
 [MIT](LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/morgan.svg
-[npm-url]: https://npmjs.org/package/morgan
-[travis-image]: https://img.shields.io/travis/expressjs/morgan/master.svg
-[travis-url]: https://travis-ci.org/expressjs/morgan
-[coveralls-image]: https://img.shields.io/coveralls/expressjs/morgan/master.svg
-[coveralls-url]: https://coveralls.io/r/expressjs/morgan?branch=master
-[downloads-image]: https://img.shields.io/npm/dm/morgan.svg
-[downloads-url]: https://npmjs.org/package/morgan
+[npm-image]: https://img.shields.io/npm/v/debra.svg
+[npm-url]: https://npmjs.org/package/debra
+[travis-image]: https://img.shields.io/travis/indexzero/morgan/master.svg
+[travis-url]: https://travis-ci.org/expressjs/indexzero/morgan
+[coveralls-image]: https://img.shields.io/coveralls/indexzero/morgan/master.svg
+[coveralls-url]: https://coveralls.io/r/indexzero/morgan?branch=master
+[downloads-image]: https://img.shields.io/npm/dm/debra.svg
+[downloads-url]: https://npmjs.org/package/debra
 [gratipay-image]: https://img.shields.io/gratipay/dougwilson.svg
 [gratipay-url]: https://www.gratipay.com/dougwilson/
